@@ -1,62 +1,32 @@
 #include "binary_trees.h"
-#include <stdio.h>
 
-binary_tree_t *recursive_check_up(const binary_tree_t *fluid,
-						 const binary_tree_t *stat);
-int recursive_check_down(const binary_tree_t *fluid,
-						   const binary_tree_t *stat);
 /**
- *  * binary_trees_ancestor - find common ancestor of 2 nodes
- *   * @first: first node
- *    * @second: second node
- *     *
- *      * Return: pointer to common ancestor or NULL
- *       */
-
+ * binary_trees_ancestor - Finds the lowes
+ * @first: Pointer
+ * @second: Pointer
+ *
+ * Return: Pointer
+ *
+ * FUNCTIONALITY *
+ *
+ * 1. It’s iterating over the first node’s ancestors.
+ * 2. For each ancestor, it’s iterating over the second node’s ancestors.
+ *
+ * 3. If the ancestor of the first node is the same as the ancestor of the
+ * second node, then we’ve found the lowest common ancestor.
+ *
+ * 4. If we don’t find a common ancestor, then we return NULL.
+ *
+ * Time Complexity: O(n^2)
+ */
 binary_tree_t *binary_trees_ancestor(const binary_tree_t *first,
-						     const binary_tree_t *second)
+									 const binary_tree_t *second)
 {
-		if (first == NULL ||
-					    first->parent == NULL ||
-					    	    second == NULL ||
-						    	    second->parent == NULL)
-					return (NULL);
-			if (recursive_check_down(first, second))
-						return ((binary_tree_t *)first);
-				return (recursive_check_up(first,second));
-}
+	const binary_tree_t *f_anc, *s_anc;
 
-binary_tree_t *recursive_check_up(const binary_tree_t *fluid,
-						 const binary_tree_t *stat)
-{
-		int result;
-
-			if (fluid->parent == NULL)
-						return (NULL);
-
-				if (fluid->parent == stat)
-							return ((binary_tree_t *)stat);
-
-					if (fluid->parent->left == fluid)
-								result = recursive_check_down(fluid->parent->right, stat);
-						else
-									result = recursive_check_down(fluid->parent->left, stat);
-							if (result == 0)
-										return (recursive_check_up(fluid->parent, stat));
-								return (fluid->parent);
-}
-
-
-int recursive_check_down(const binary_tree_t *fluid,
-						   const binary_tree_t *stat)
-{
-		printf("currently at: %d and checking for %d\n", fluid->n, stat->n);
-			if (fluid == stat)
-						return (1);
-
-				if (fluid->left)
-							recursive_check_down(fluid->left, stat);
-					if (fluid->right)
-								recursive_check_down(fluid->right, stat);
-						return (0);
+	for (f_anc = first; f_anc; f_anc = f_anc->parent)
+		for (s_anc = second; s_anc; s_anc = s_anc->parent)
+			if (f_anc == s_anc)
+				return ((binary_tree_t *)f_anc);
+	return (NULL);
 }
